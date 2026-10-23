@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fractais de Julia e Mandelbrot</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="container">
+    <header>
+      <p class="eyebrow">MATEMÁTICA PARA COMPUTAÇÃO · PRJ.3</p>
+      <h1>Fractais de Julia e Mandelbrot</h1>
+      <p class="intro">Explore o plano complexo e veja como os números complexos produzem padrões fractais.</p>
+    </header>
+
+    <section class="panel">
+      <form method="post">
+        <div class="field">
+          <label for="tipo">Conjunto</label>
+          <select id="tipo" name="tipo">
+            <option value="mandelbrot" {% if valores.tipo == 'mandelbrot' %}selected{% endif %}>Mandelbrot</option>
+            <option value="julia" {% if valores.tipo == 'julia' %}selected{% endif %}>Julia</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="real">Componente real</label>
+          <input id="real" name="real" type="number" step="any" value="{{ valores.real }}" required>
+        </div>
+        <div class="field">
+          <label for="imaginaria">Componente imaginária</label>
+          <input id="imaginaria" name="imaginaria" type="number" step="any" value="{{ valores.imaginaria }}" required>
+        </div>
+        <div class="field">
+          <label for="passo">Passo (0,002 a 0,05)</label>
+          <input id="passo" name="passo" type="number" min="0.002" max="0.05" step="0.001" value="{{ valores.passo }}" required>
+        </div>
+        <div class="field">
+          <label for="iteracoes">Máximo de iterações (20 a 500)</label>
+          <input id="iteracoes" name="iteracoes" type="number" min="20" max="500" step="10" value="{{ valores.iteracoes }}" required>
+        </div>
+        <button type="submit">Gerar fractal</button>
+      </form>
+      {% if erro %}<p class="error">{{ erro }}</p>{% endif %}
+    </section>
+
+    {% if imagem %}
+    <section class="result">
+      <h2>Resultado</h2>
+      <img src="data:image/png;base64,{{ imagem }}" alt="Fractal gerado">
+    </section>
+    {% else %}
+    <section class="result empty">
+      <h2>Seu fractal aparecerá aqui</h2>
+      <p>Experimente começar com Mandelbrot (−0,5; 0) ou Julia (−0,12; 0,74).</p>
+    </section>
+    {% endif %}
+
+    <section class="explanation">
+      <h2>Como funciona</h2>
+      <p>A cada iteração, o programa calcula <code>z(n+1) = z(n)² + c</code>. Quando o módulo de z ultrapassa 2, o ponto é considerado divergente. A cor representa a iteração de divergência; pontos que não divergem dentro do limite ficam pretos.</p>
+      <p><strong>Mandelbrot:</strong> z começa em zero e cada ponto define c. <strong>Julia:</strong> c é fixo e cada ponto define o z inicial.</p>
+    </section>
+    <footer>Backend em Python · Flask · Pillow</footer>
+  </main>
+</body>
+</html>
